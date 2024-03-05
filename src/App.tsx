@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
+interface ImageInference {
+  description: string
+  score: string
+}
+
 interface RecordedSound {
   src: string
   time: string
-  inferences: Inference[]
+  inferences: SoundInference[]
 }
 
-interface Inference {
+interface SoundInference {
   time: string
   category: string
   rawScore: number
@@ -17,7 +22,7 @@ interface Inference {
 interface Image {
   src: string
   time: string
-  inferences: Inference[]
+  inferences: ImageInference[]
 }
 
 interface Sighting {
