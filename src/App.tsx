@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import { useNavigatorOnLine } from './Online'
 
 interface ImageInference {
   description: string
@@ -40,21 +41,48 @@ interface Sighting {
 }
 
 function App() {
+  const [sightingId, setSightingId] = useState<string>('')
   const [sighting, setSighting] = useState<Sighting | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const isOnline = useNavigatorOnLine();
 
   useEffect(() => {
-    fetch('http://json.buzzcopper.org/2024/03/04/a1816a52-da0a-11ee-9685-3030f93453f4/Sighting.json')
-      .then(response => response.json())
-      .then(data => setSighting(data.sighting))
-  }, [])
+    if (!sightingId) return
+    // TODO: How might we support sightings in different months / years?
+    fetch(`http://json.buzzcopper.org/2024/03/04/${sightingId}/Sighting.json`)
+      .then(response => {
+        if (!response.ok) throw new Error('Invalid Sighting ID')
+
+        return response.json()
+      })
+      .then(data => {setSighting(data.sighting)})
+      .catch(error => setError(error.message))
+  }, [sightingId])
 
   useEffect(() => {
     if (sighting) {
       console.log(sighting)
     }
-  }
-  , [sighting])
+  }, [sighting])
 
+  if (!isOnline) return <div>Please connect to the internet</div>
+  if (!sightingId) return (
+    <form onSubmit={(e) => {
+      setSightingId(e.currentTarget.elements[0].value)
+      e.preventDefault()
+    }}>
+      <h1>Enter a Sighting ID</h1>
+      <input
+        type="text"
+        defaultValue={'a1816a52-da0a-11ee-9685-3030f93453f4'}
+        width={100}
+      />
+      <input type="submit" value="Submit" />
+      <input type="button" value="Demo" onClick={() => setSightingId('a1816a52-da0a-11ee-9685-3030f93453f4')} />
+      <input type="button" value="Demo (error)" onClick={() => setSightingId('404-404-404')} />
+    </form>
+  )
+  if (error) return <div>Error: {error}</div>
   if (!sighting) return <div>Loading...</div>
 
   return (
