@@ -41,15 +41,22 @@ interface Sighting {
 }
 
 function App() {
-  const [sightingId, setSightingId] = useState<string>('')
   const [sighting, setSighting] = useState<Sighting | null>(null)
   const [error, setError] = useState<string | null>(null)
   const isOnline = useNavigatorOnLine();
 
+  // /2024/03/04/a1816a52-da0a-11ee-9685-3030f93453f4
+  console.log(window.location.pathname)
+
+  const year = window.location.pathname.split('/')[1]
+  const month = window.location.pathname.split('/')[2]
+  const day = window.location.pathname.split('/')[3]
+  const id = window.location.pathname.split('/')[4]
+
   useEffect(() => {
-    if (!sightingId) return
+    if (!year || !month || !day || !id) return
     // TODO: How might we support sightings in different months / years?
-    fetch(`https://json.buzzcopper.org/2024/03/04/${sightingId}/sighting.json`)
+    fetch(`https://json.buzzcopper.org/${year}/${month}/${day}/${id}/sighting.json`)
       .then(response => {
         if (!response.ok) throw new Error('Invalid Sighting ID')
 
@@ -57,43 +64,10 @@ function App() {
       })
       .then(data => {setSighting(data.sighting)})
       .catch(error => setError(error.message))
-  }, [sightingId])
+  }, [year, month, day, id])
 
-  // Fix: Add type assertion to event target
-  if (!sightingId) return (
-    <form onSubmit={(e) => {
-      setSightingId((e.currentTarget.elements[0] as HTMLInputElement).value)
-      e.preventDefault()
-    }}>
-      <h1>Enter a Sighting ID</h1>
-      <input
-        type="text"
-        defaultValue={'a1816a52-da0a-11ee-9685-3030f93453f4'}
-        width={100}
-      />
-      <input type="submit" value="Submit" />
-      <input type="button" value="Demo" onClick={() => setSightingId('a1816a52-da0a-11ee-9685-3030f93453f4')} />
-      <input type="button" value="Demo (error)" onClick={() => setSightingId('404-404-404')} />
-    </form>
-  )
 
   if (!isOnline) return <div>Please connect to the internet</div>
-  if (!sightingId) return (
-    <form onSubmit={(e) => {
-      setSightingId((e.currentTarget.elements[0] as HTMLInputElement).value)
-      e.preventDefault()
-    }}>
-      <h1>Enter a Sighting ID</h1>
-      <input
-        type="text"
-        defaultValue={'a1816a52-da0a-11ee-9685-3030f93453f4'}
-        width={100}
-      />
-      <input type="submit" value="Submit" />
-      <input type="button" value="Demo" onClick={() => setSightingId('a1816a52-da0a-11ee-9685-3030f93453f4')} />
-      <input type="button" value="Demo (error)" onClick={() => setSightingId('404-404-404')} />
-    </form>
-  )
   if (error) return <div>Error: {error}</div>
   if (!sighting) return <div>Loading...</div>
 
