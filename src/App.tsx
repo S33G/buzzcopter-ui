@@ -49,7 +49,7 @@ function App() {
   useEffect(() => {
     if (!sightingId) return
     // TODO: How might we support sightings in different months / years?
-    fetch(`http://json.buzzcopper.org/2024/03/04/${sightingId}/sighting.json`)
+    fetch(`https://json.buzzcopper.org/2024/03/04/${sightingId}/sighting.json`)
       .then(response => {
         if (!response.ok) throw new Error('Invalid Sighting ID')
 
