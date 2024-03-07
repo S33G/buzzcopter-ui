@@ -77,12 +77,6 @@ function App() {
     </form>
   )
 
-  useEffect(() => {
-    if (sighting) {
-      console.log(sighting)
-    }
-  }, [sighting])
-
   if (!isOnline) return <div>Please connect to the internet</div>
   if (!sightingId) return (
     <form onSubmit={(e) => {
