@@ -45,9 +45,6 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   const isOnline = useNavigatorOnLine();
 
-  // /2024/03/04/a1816a52-da0a-11ee-9685-3030f93453f4
-  console.log(window.location.pathname)
-
   const year = window.location.pathname.split('/')[1]
   const month = window.location.pathname.split('/')[2]
   const day = window.location.pathname.split('/')[3]
@@ -55,10 +52,9 @@ function App() {
 
   useEffect(() => {
     if (!year || !month || !day || !id) return
-    // TODO: How might we support sightings in different months / years?
     fetch(`https://json.buzzcopper.org/${year}/${month}/${day}/${id}/sighting.json`)
       .then(response => {
-        if (!response.ok) throw new Error('Invalid Sighting ID')
+        if (!response.ok) throw new Error('Failed to fetch sighting data.')
 
         return response.json()
       })
