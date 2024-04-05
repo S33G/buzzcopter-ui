@@ -41,9 +41,13 @@ export interface IEvent {
     event: string;
     description: string;
     emoji?: string;
-  }
+    link?: string;
+}
 
 export interface IEventLogProps {
     events: IEvent[];
     macAddress: string;
+    title?: string;
+    links?: { url: string, label: string }[];
 }
+

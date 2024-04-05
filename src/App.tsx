@@ -23,7 +23,7 @@ const App = () => {
       })
       .then(data => {
         console.log(data);
-        if (type === 'eventLog') {
+        if (type === 'eventLog' || type === 'sightLog') {
           setData(data.events);
         } else if (type === 'sighting') {
           setData(data.sighting);
@@ -33,12 +33,27 @@ const App = () => {
   }, [year, month, day, id, type])
 
 
+  console.log(data);
   if (!isOnline) return <div>Please connect to the internet</div>
   if (error) return <div>Error: {error}</div>
   if (type === 'sighting' && data) return <Sighting sighting={data as ISighting} />
-  if (type === 'eventLog' && data) return <EventLog events={data as IEvent[]} macAddress={id.replace('Buzz', '')} />
+  if (type === 'eventLog' && data){
+    return <EventLog events={data as IEvent[]} macAddress={id.replace('Buzz', '')} links={[
+      {
+        url: `/${year}/${month}/${day}/${id}/sightLog`,
+        label: 'View Sight Log'
+      }
+    ]} />
+  }
 
-  return <Welcome />
+  if (type === 'sightLog' && data) {
+    return <EventLog events={data as IEvent[]} macAddress={id.replace('Buzz', '')} title={'Sight Log'} links={[
+      {
+        url: `/${year}/${month}/${day}/${id}/eventLog`,
+        label: 'View Event Log'
+      }
+    ]} />
+  }
 }
 
 export default App

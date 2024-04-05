@@ -16,6 +16,7 @@ const getEmojiForEvent = (event: string): string => {
     'Done GCS upload': '📤',
     'Sleep': '💤',
     'Start listening': '🐝',
+    'Startup': '🚀',
   };
 
   for (const key in emojiMap) {
@@ -27,8 +28,8 @@ const getEmojiForEvent = (event: string): string => {
   return '🐝';
 }
 
-const EventLog: React.FC<IEventLogProps> = ({events, macAddress}) => {
-  return(
+const EventLog: React.FC<IEventLogProps> = ({events, macAddress, title, links}) => {
+  return (
     <div className="event-log">
       <Logo style={{
         display: 'flex',
@@ -38,7 +39,7 @@ const EventLog: React.FC<IEventLogProps> = ({events, macAddress}) => {
         alignItems: 'center',
         textAlign: 'center',
       }} />
-      <h1 style={{ textAlign: 'center' }}>Event Log</h1>
+      <h1 style={{ textAlign: 'center' }}>{title ?? 'Event Log'}</h1>
       <p style={{ textAlign: 'center' }}>
         <strong>MAC Address:</strong> {macAddress}
       </p>
@@ -46,11 +47,24 @@ const EventLog: React.FC<IEventLogProps> = ({events, macAddress}) => {
         {events.length} events recorded
       </p>
 
+      {events.length === 0 && (
+        <p style={{ textAlign: 'center' }}>
+          No events recorded
+        </p>
+      )}
+
+      {links && links.length > 0 && (
+        <div style={{ textAlign: 'center' }}>
+          {links.map((link, index) => (
+            <a key={index} href={link.url} rel="noreferrer">{link.label}</a>
+          ))}
+        </div>
+      )}
+
       {events.map((event, index) => (
         <article key={index}>
           <div className="emoji">
             {event.emoji ? event.emoji : getEmojiForEvent(event.event)}
-            {}
           </div>
           <i>{index + 1}</i>
           <div>
@@ -61,12 +75,14 @@ const EventLog: React.FC<IEventLogProps> = ({events, macAddress}) => {
           </div>
           <div>
             <p>{event.description ? event.description : '-'}</p>
+            {event.link && event.link.length > 0 && (
+              <a href={event.link} target="_blank" rel="noreferrer">Link</a>
+            )}
           </div>
-
         </article>
       ))}
     </div>
-  )
+  );
 }
 
 
