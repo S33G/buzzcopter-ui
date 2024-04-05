@@ -20,7 +20,7 @@ const getEmojiForEvent = (event: string): string => {
 
   for (const key in emojiMap) {
     if (event.toLowerCase().includes(key.toLowerCase())) {
-      return emojiMap[key];
+      return emojiMap[key as keyof typeof emojiMap];
     }
   }
 
