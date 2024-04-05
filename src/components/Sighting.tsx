@@ -1,5 +1,6 @@
 import React from 'react';
 import { ISighting } from '../types';
+import { Logo } from './Welcome';
 
 interface SightingProps {
     sighting: ISighting
@@ -7,7 +8,18 @@ interface SightingProps {
 
 const Sighting: React.FC<SightingProps> = ({sighting}) => {
     return (
-        <>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto'
+        }}>
+          <Logo style={{
+            display: 'flex',
+            width: '300px',
+            objectFit: 'cover',
+            margin: '0 auto',
+            alignItems: 'center',
+            textAlign: 'center',
+          }} />
           <div>
             <h1>Sighting Info</h1>
             <p>UUID: {sighting.uuid}</p>
@@ -60,7 +72,7 @@ const Sighting: React.FC<SightingProps> = ({sighting}) => {
               </div>
             ))}
           </div>
-        </>
+        </div>
     );
 };
 

@@ -13,7 +13,6 @@ const App = () => {
   const isOnline = useNavigatorOnLine();
   const [year, month, day, id, type] = window.location.pathname.split('/').slice(1, 6)
 
-
   useEffect(() => {
     if (!year || !month || !day || !id) return
     fetch(`https://json.buzzcopper.org/${year}/${month}/${day}/${id}/${type ?? 'sighting'}.json`)
@@ -37,7 +36,7 @@ const App = () => {
   if (!isOnline) return <div>Please connect to the internet</div>
   if (error) return <div>Error: {error}</div>
   if (type === 'sighting' && data) return <Sighting sighting={data as ISighting} />
-  if (type === 'eventLog' && data) return <EventLog events={data as IEvent[]} />
+  if (type === 'eventLog' && data) return <EventLog events={data as IEvent[]} macAddress={id.replace('Buzz', '')} />
 
   return <Welcome />
 }

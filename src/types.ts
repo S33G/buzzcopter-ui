@@ -40,8 +40,10 @@ export interface IEvent {
     time: string;
     event: string;
     description: string;
+    emoji?: string;
   }
 
 export interface IEventLogProps {
     events: IEvent[];
+    macAddress: string;
 }
